@@ -16,10 +16,10 @@ async def main():
     await asyncio.sleep(5)
     print("主程序继续2  时间戳：", (datetime.now() - startTime).seconds)
     # 不调用 await task
-    # res = await task
-    # print(
-    #     "接收到task返回的数据", res, "  时间戳：", (datetime.now() - startTime).seconds
-    # )
+    res = await task
+    print(
+        "接收到task返回的数据", res, "  时间戳：", (datetime.now() - startTime).seconds
+    )
     print("主线完成 时间戳：", (datetime.now() - startTime).seconds)
 
 
