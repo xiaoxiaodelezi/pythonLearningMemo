@@ -4,10 +4,8 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-
-
+# 各个手指对应的点
 mp_hands = mp.tasks.vision.HandLandmarksConnections
-print(mp_hands)
 mp_drawing = mp.tasks.vision.drawing_utils
 mp_drawing_styles = mp.tasks.vision.drawing_styles
 
@@ -62,16 +60,16 @@ base_options = python.BaseOptions(model_asset_path="hand_landmarker.task")
 options = vision.HandLandmarkerOptions(base_options=base_options, num_hands=2)
 detector = vision.HandLandmarker.create_from_options(options)
 
-# img = cv2.imread("woman_hands.jpg")
 
 image = mp.Image.create_from_file("woman_hands.jpg")
 
 detection_result = detector.detect(image)
 
-# print(image.numpy_view()[:,:,:3])
-
-annotated_image = draw_landmarks_on_image(image.numpy_view()[:, :, :3], detection_result)
-cv2.imshow("women_hands",cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+# numpy_view是4通道的
+annotated_image = draw_landmarks_on_image(
+    image.numpy_view()[:, :, :3], detection_result
+)
+cv2.imshow("women_hands", cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
