@@ -6,7 +6,9 @@ from mediapipe.tasks.python import vision
 
 # 各个手指对应的点
 mp_hands = mp.tasks.vision.HandLandmarksConnections
+# https://ai.google.dev/edge/api/mediapipe/python/mp/tasks/vision/drawing_utils
 mp_drawing = mp.tasks.vision.drawing_utils
+# https://ai.google.dev/edge/api/mediapipe/python/mp/tasks/vision/drawing_styles
 mp_drawing_styles = mp.tasks.vision.drawing_styles
 
 MARGIN = 10
@@ -26,11 +28,26 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         handedness = handedness_list[idx]
 
         # Draw the hand landmarks.
+        """
+        mp.tasks.vision.drawing_utils.draw_landmarks(
+            image: np.ndarray,
+            landmark_list: list[landmark_module.NormalizedLandmark],
+            connections: Optional[list[_CONNECTION]] = None,
+            landmark_drawing_spec: Optional[Union[DrawingSpec, Mapping[int, DrawingSpec]]] = DrawingSpec(color=RED_COLOR),
+            connection_drawing_spec: Union[DrawingSpec, Mapping[tuple[int, int], DrawingSpec]] = DrawingSpec(),
+            is_drawing_landmarks: bool = True
+        )
+        """
+
         mp_drawing.draw_landmarks(
             annotated_image,
             hand_landmarks,
             mp_hands.HAND_CONNECTIONS,
+            # A mapping from each hand landmark to its default drawing spec.
+            # mp.tasks.vision.drawing_styles.get_default_hand_landmarks_style() -> Mapping[int, mp.tasks.vision.drawing_utils.DrawingSpec]
             mp_drawing_styles.get_default_hand_landmarks_style(),
+            # A mapping from each hand connection to its default drawing spec.
+            # mp.tasks.vision.drawing_styles.get_default_hand_connections_style() -> Mapping[tuple[int, int], _DrawingSpec]
             mp_drawing_styles.get_default_hand_connections_style(),
         )
 
@@ -42,6 +59,7 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         text_y = int(min(y_coordinates) * height) - MARGIN
 
         # Draw handedness (left or right hand) on the image.
+        # cv2.putText(img, text, org, fontFace, fontScale, color, thickness=1, lineType=cv2.LINE_AA, bottomLeftOrigin=False)
         cv2.putText(
             annotated_image,
             f"{handedness[0].category_name}",
@@ -56,7 +74,7 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     return annotated_image
 
 
-base_options = python.BaseOptions(model_asset_path="hand_landmarker.task")
+base_options = python.BaseOptions(model_asset_path="../hand_landmarker.task")
 options = vision.HandLandmarkerOptions(base_options=base_options, num_hands=2)
 detector = vision.HandLandmarker.create_from_options(options)
 
