@@ -29,3 +29,6 @@ with语句学习
 
 2026-07-31
 live stream 手势添加
+
+2026-08-03
+pyscript
