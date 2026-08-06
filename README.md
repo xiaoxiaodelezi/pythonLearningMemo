@@ -38,3 +38,6 @@ pyscript
 
 2026-08-05
 pyscript
+
+2026-08-06
+尝试使用内嵌方式来在html中调用python
